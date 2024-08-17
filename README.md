@@ -53,15 +53,14 @@ Exercício 1:
 # diagrama do banco de dados
 
 
--- Criação do Banco de DadosCREATE DATABASE IF NOTEXISTS carinho_de_pets;
+-- Criação do Banco de DadosCREATE DATABASE carinho_de_pets;
 USE carinho_de_pets;
 
 -- Tabela para ClientesCREATETABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOTNULL,
     telefone VARCHAR(20),
-    endereco TEXT,
-    documento_cliente VARCHAR(255) -- Para armazenar caminho para documento do cliente
+    endereco TEXT
 );
 
 -- Tabela para AnimaisCREATETABLE animais (
@@ -73,8 +72,7 @@ USE carinho_de_pets;
     racao_preferida VARCHAR(50),
     habitos TEXT,
     cliente_id INT,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
-    documento_animal VARCHAR(255) -- Para armazenar caminho para documento do animal
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
 
 -- Tabela para VeterináriosCREATETABLE veterinarios (
@@ -90,7 +88,6 @@ USE carinho_de_pets;
     veterinario_id INT,
     cliente_id INT,
     estado_atendimento ENUM('Agendado', 'Em Atendimento', 'Finalizado') DEFAULT'Agendado',
-    receita TEXT,
     FOREIGN KEY (animal_id) REFERENCES animais(id),
     FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id),
     FOREIGN KEY (cliente_id) REFERENCES clientes(id)
@@ -100,7 +97,62 @@ USE carinho_de_pets;
     id INT AUTO_INCREMENT PRIMARY KEY,
     atendimento_id INT,
     observacoes TEXT,
-   
+    receita TEXT,
+    FOREIGN KEY (atendimento_id) REFERENCES atendimentos(id)
+);
+
+-- Tabela para ExamesCREATETABLE exames (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    descricao TEXT
+);
+
+-- Tabela para Resultados de ExamesCREATETABLE resultados_exames (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    exame_id INT,
+    atendimento_id INT,
+    resultado TEXT,
+    FOREIGN KEY (exame_id) REFERENCES exames(id),
+    FOREIGN KEY (atendimento_id) REFERENCES atendimentos(id)
+);
+
+-- Tabela para Documentos dos AnimaisCREATETABLE documentos_animais (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    animal_id INT,
+    tipo_documento VARCHAR(50),
+    caminho_documento VARCHAR(255),
+    FOREIGN KEY (animal_id) REFERENCES animais(id)
+);
+
+-- Tabela para Documentos dos ClientesCREATETABLE documentos_clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    tipo_documento VARCHAR(50),
+    caminho_documento VARCHAR(255),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+-- Tabela para Fichas de AtendimentoCREATETABLE fichas_atendimento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    atendimento_id INT,
+    documento TEXT,
+    FOREIGN KEY (atendimento_id) REFERENCES atendimentos(id)
+);
+
+-- Tabela para MedicamentosCREATETABLE medicamentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    descricao TEXT
+);
+
+-- Tabela para Prescrições de MedicamentosCREATETABLE prescricoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    atendimento_id INT,
+    medicamento_id INT,
+    dosagem VARCHAR(50),
+    FOREIGN KEY (atendimento_id) REFERENCES atendimentos(id),
+    FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id)
+);
 
 
 # diagrama do caso de uso 
